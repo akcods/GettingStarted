@@ -6,11 +6,11 @@ public class User
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public ObjectId Id { get; init; }
-    [BsonElement]
-    public required string Name { get; init; }
-    [BsonElement]
-    public required string Email { get; init; }
-    [BsonElement]
-    public required string Password { get; init; }
+    public ObjectId Id { get; set; }
+    [BsonElement("name")]
+    public string Name { get; set; }
+    [BsonElement("email")]
+    public string Email { get; set; }
+    [BsonElement("password")]
+    public string Password { get; set; }
 };

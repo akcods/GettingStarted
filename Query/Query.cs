@@ -1,6 +1,5 @@
 using GettingStarted.Data;
 using GettingStarted.Types;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GettingStarted.Query;
@@ -13,6 +12,7 @@ public class Query
     
     public Query(IMongoDatabase mongoDatabase)
     {
+        _users = mongoDatabase.GetCollection<User>("users");
         _restaurantsCollection = mongoDatabase.GetCollection<Restaurant>("restaurants");
     }
     public Book GetBook()
@@ -27,64 +27,19 @@ public class Query
 
     public async Task<Restaurant> GetRestaurantAsync()
     {
-        var doc = await _restaurantsCollection.Database
-            .GetCollection<BsonDocument>(_restaurantsCollection.CollectionNamespace.CollectionName)
-            .Find(new BsonDocument())
-            .FirstOrDefaultAsync();
-
-        var filter = Builders<Restaurant>.Filter.Empty;
-        var restaurant = await _restaurantsCollection.FindAsync(filter);
-        return restaurant.FirstOrDefault();
-
-        //Restaurant res = doc.ToJson();
-        //Console.WriteLine(doc.ToJson());
-
-        //return new Restaurant();
+        var restaurant = await _restaurantsCollection.Find(_ => true).FirstOrDefaultAsync();
+        return restaurant;
     }
     
     public async Task<List<Restaurant>> GetRestaurantsAsync()
     {
-        var doc = await _restaurantsCollection.Database
-            .GetCollection<BsonDocument>(_restaurantsCollection.CollectionNamespace.CollectionName)
-            .Find(new BsonDocument())
-            .FirstOrDefaultAsync();
-
-        Console.WriteLine(doc.ToJson());
-
-        try
-        {
-            var filter = Builders<Restaurant>.Filter.Empty;
-            var allRestaurants = await _restaurantsCollection.FindAsync(filter);
-            return allRestaurants.ToList();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message.ToString());
-        }
-
-        return new List<Restaurant>();
+        var allRestaurants = await _restaurantsCollection.Find(_ => true).ToListAsync();
+        return allRestaurants;
 
     }
 
     public async Task<List<User>> GetUsers()
     {
-        var docs = await _users.Database
-            .GetCollection<BsonDocument>(_users.CollectionNamespace.CollectionName)
-            .Find(new BsonDocument())
-            .FirstOrDefaultAsync();
-
-        Console.WriteLine(docs.ToJson());
-
-        var bsonDocs = await _users.Database
-            .GetCollection<BsonDocument>(_users.CollectionNamespace.CollectionName)
-            .Find(_ => true)
-            .ToListAsync();
-
-        foreach (var doc in bsonDocs)
-        {
-            Console.WriteLine(doc.ToJson());
-        }
-
         var users = await _users.Find(_ => true).ToListAsync();
         return users;
     }

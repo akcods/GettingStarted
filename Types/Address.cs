@@ -5,13 +5,15 @@ namespace GettingStarted.Types;
 [BsonIgnoreExtraElements]
 public class Address
 {
-    public string? Building { get; set; }
+    [BsonElement("building")]
+    public string Building { get; set; }
 
     [BsonElement("coord")]
-    public double[]? Coordinates { get; set; }
+    public double[] Coordinates { get; set; }
 
-    public string? Street { get; set; }
+    [BsonElement("street")]
+    public string Street { get; set; }
 
     [BsonElement("zipcode")]
-    public string? ZipCode { get; set; }
+    public string ZipCode { get; set; }
 }
