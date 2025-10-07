@@ -1,3 +1,3 @@
 namespace GettingStarted.Types;
 
-public record Book(string Title, Author Author);
+public record Book(int id, string Title, Author Author);
