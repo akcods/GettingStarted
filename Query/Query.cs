@@ -1,5 +1,6 @@
 using GettingStarted.Data;
 using GettingStarted.Types;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GettingStarted.Query;
@@ -17,12 +18,20 @@ public class Query
     }
     public Book GetBook()
     {
-        return new Book(4, "C# in depth.", new Author("Jon Skeet"));
+        return new Book
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Title = "Hello dotnet",
+            Author = new Author
+            {
+                Name = "John"
+            }
+        };
     }
 
-    public Book GetBookById(int id)
+    public Book GetBookById(ObjectId id)
     {
-        return new StaticData().Books.FirstOrDefault(b => b.id == id) ?? throw new GraphQLException($"Book id: {id} not found");
+        return new StaticData().Books.FirstOrDefault(b => b.Id == id.ToString()) ?? throw new GraphQLException($"Book id: {id} not found");
     }
 
     public async Task<Restaurant> GetRestaurantAsync()

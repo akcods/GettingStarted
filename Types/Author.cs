@@ -1,3 +1,5 @@
 namespace GettingStarted.Types;
 
-public record Author(string Name);
+public class Author {
+    public string Name { get; set; }
+};

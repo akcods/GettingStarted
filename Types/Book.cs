@@ -1,3 +1,14 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace GettingStarted.Types;
 
-public record Book(int id, string Title, Author Author);
+public class Book
+{
+    // [BsonId]
+    // [BsonRepresentation(BsonType.ObjectId)]
+    // public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    public string Id { get; set; }
+    public string Title { get; set; }
+    public Author Author { get; set; }
+}
