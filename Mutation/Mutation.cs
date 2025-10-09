@@ -1,4 +1,5 @@
 using GettingStarted.Types;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GettingStarted.Mutation;
@@ -14,16 +15,20 @@ public class Mutation
     }
     public async Task<Book> AddBookAsync(Book book)
     {
-        var newBook = new Book
-        {
-            Title = book.Title,
-            Author = new Author
-            {
-                Name = book.Author.Name
-            }
-        };
-
-        await _books.InsertOneAsync(newBook);
+        await _books.InsertOneAsync(book);
         return book;
+    }
+
+    public async Task<Book> UpdateBookAsync(Book book)
+    {
+        var filter = Builders<Book>.Filter.Eq(b => b.Id, book.Id);
+        await _books.ReplaceOneAsync(filter, book);
+        return book;
+    }
+
+    public async Task<bool> DeleteBookAsync(string id)
+    {
+        var result = await _books.DeleteOneAsync(b => b.Id.Equals(id));
+        return result.DeletedCount > 0;
     }
 }

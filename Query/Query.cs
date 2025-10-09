@@ -1,6 +1,4 @@
-using GettingStarted.Data;
 using GettingStarted.Types;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GettingStarted.Query;
@@ -9,29 +7,25 @@ namespace GettingStarted.Query;
 public class Query
 {
     private readonly IMongoCollection<User> _users;
+    private readonly IMongoCollection<Book> _books;
     private readonly IMongoCollection<Restaurant> _restaurantsCollection;
     
     public Query(IMongoDatabase mongoDatabase)
     {
+        _books = mongoDatabase.GetCollection<Book>("books");
         _users = mongoDatabase.GetCollection<User>("users");
         _restaurantsCollection = mongoDatabase.GetCollection<Restaurant>("restaurants");
     }
-    public Book GetBook()
+    public async Task<List<Book>> GetBooks()
     {
-        return new Book
-        {
-            Id = ObjectId.GenerateNewId().ToString(),
-            Title = "Hello dotnet",
-            Author = new Author
-            {
-                Name = "John"
-            }
-        };
+        var allBooks = await _books.Find(_ => true).ToListAsync();
+        return allBooks;
     }
 
-    public Book GetBookById(ObjectId id)
+    public async Task<Book> GetBookById(string id)
     {
-        return new StaticData().Books.FirstOrDefault(b => b.Id == id.ToString()) ?? throw new GraphQLException($"Book id: {id} not found");
+        var book = _books.Find(b => b.Id!.Equals(id));
+        return await book.FirstOrDefaultAsync();
     }
 
     public async Task<Restaurant> GetRestaurantAsync()

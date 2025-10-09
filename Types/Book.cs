@@ -5,10 +5,9 @@ namespace GettingStarted.Types;
 
 public class Book
 {
-    // [BsonId]
-    // [BsonRepresentation(BsonType.ObjectId)]
-    // public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
-    public string Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
     public string Title { get; set; }
     public Author Author { get; set; }
 }
